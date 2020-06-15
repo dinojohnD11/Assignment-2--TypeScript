@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Expense Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="alert" class="hide"> dummy invisible text </div>
+        <div id="sortandfilter" >
+            <p style="text-align:right; padding-bottom: 3px; margin-bottom: 0px; opacity: 0.6;"><span>
+                <label for="sortby">Sort by</label>
+                <select name="sortby" id="sortby">
+                    <option value="" selected>Time of entry</option>
+                    <option value="ie">I/E</option>
+                    <option value="date">Date</option>
+                    <option value="name">Name</option>
+                    <option value="amount">Amount</option>
+                </select>
+                <label for="filterby">Filter by</label>
+                <select name="filterby" id="filterby">     
+                    <option value="0" selected>I/E</option>
+                    <option value="1">Date</option>
+                    <option value="2">Name</option>
+                    <option value="3">Amount</option>
+                </select>
+                <input type="text" name="filter" id="filter">
+            </span>
+            </p>
+        </div>
+        <div class="flex-container">
+            <div  id="inputcontainer">
+                <form id="ie-form">
+                    <textarea name="ie-input" id="ie-input" placeholder="Enter I/E, Date, Name and Amount in CSV format along with header." ></textarea>
+                    
+                    <input type="submit" id="submitbtn" value="Submit" class="btn sbtn">
+    
+                </form>
+            </div>
+            <div  id="tablecontainer">
+                <table >
+                    <thead>
+                        <tr>
+                            <th>I/E</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ie-list">
+                        
+                        
+                    </tbody>
+                </table>
+                <p>Total income: <span id="ti">0</span></p>
+                <p>Total expense: <span id="te">0</span></p>
+                <p>Balance: <span id="b">0</span></p>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+
+</body>
+</html>
