@@ -9,8 +9,7 @@ public date: Date;
 //to define they type for class Ieentry
 interface Ieentryinterface{
      ie:string;
-     date:Date;
-     
+     date:Date;  
      name:string;
      amount:string;
 }
