@@ -10,6 +10,7 @@ public date: Date;
 interface Ieentryinterface{
      ie:string;
      date:Date;
+     
      name:string;
      amount:string;
 }

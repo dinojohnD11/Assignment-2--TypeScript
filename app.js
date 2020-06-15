@@ -111,7 +111,6 @@ var LocalStore = /** @class */ (function () {
                 expense += Number(ieentry.amount);
             }
             ui.addieentrytoList(ieentry);
-            
         });
         document.getElementById('ti').innerHTML = "" + income;
         document.getElementById('te').innerHTML = "" + expense;
