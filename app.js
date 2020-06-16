@@ -1,64 +1,67 @@
 "use strict";
 //class for ir entry objects
-var Ieentry = /** @class */ (function () {
-    function Ieentry(ie, datee, name, amount) {
+class Ieentry {
+    constructor(ie, datee, name, amount) {
         this.ie = ie;
         this.name = name;
         this.amount = amount;
         this.date = new Date(datee);
     }
-    return Ieentry;
-}());
+}
 //UI class with all the UI methods
-var UI = /** @class */ (function () {
-    function UI() {
-    }
-    UI.prototype.addieentrytoList = function (ieentry) {
-        var list = document.getElementById('ie-list');
-        var row = document.createElement('tr');
-        var d = ieentry.date.getDate();
-        var m = ieentry.date.getMonth();
-        var dstring = '';
+class UI {
+    addieentrytoList(ieentry) {
+        const list = document.getElementById('ie-list');
+        const row = document.createElement('tr');
+        let d = ieentry.date.getDate();
+        let m = ieentry.date.getMonth();
+        let dstring = '';
         if (m > 8) {
-            dstring += m + 1 + "/";
+            dstring += `${m + 1}/`;
         }
         else {
-            dstring += "0" + (m + 1) + "/";
+            dstring += `0${m + 1}/`;
         }
         if (d > 9) {
-            dstring += d + "/";
+            dstring += `${d}/`;
         }
         else {
-            dstring += "0" + d + "/";
+            dstring += `0${d}/`;
         }
-        dstring += "" + ieentry.date.getFullYear();
-        row.innerHTML = "\n            <td>" + ieentry.ie + "</td>\n            <td>" + dstring + "</td>\n            <td>" + ieentry.name + "</td>\n            <td>" + ieentry.amount + "</td>\n            <td><a href=\"#\" class=\"delete\">&times<a></td>\n            ";
+        dstring += `${ieentry.date.getFullYear()}`;
+        row.innerHTML = `
+            <td>${ieentry.ie}</td>
+            <td>${dstring}</td>
+            <td>${ieentry.name}</td>
+            <td>${ieentry.amount}</td>
+            <td><a href="#" class="delete">&times<a></td>
+            `;
         if ((ieentry.ie == 'I'))
             row.style.backgroundColor = '#67e467';
         else
             row.style.backgroundColor = '#e94f4f';
         list.appendChild(row);
-    };
-    UI.prototype.showAlert = function (message, className) {
-        var alertdiv = document.getElementById('alert');
-        alertdiv.className = "" + className;
+    }
+    showAlert(message, className) {
+        const alertdiv = document.getElementById('alert');
+        alertdiv.className = `${className}`;
         alertdiv.textContent = message;
         setTimeout(function () {
             alertdiv.className = "hide";
         }, 3000);
-    };
-    UI.prototype.deleteieentry = function (target) {
+    }
+    deleteieentry(target) {
         ((target.parentElement).parentElement).remove();
-    };
+    }
     // after a successful sumbil
-    UI.prototype.clearTextarea = function () {
+    clearTextarea() {
         document.getElementById('ie-input').value = '';
-    };
-    UI.prototype.filterfunc = function (filter) {
-        var filterby = +document.getElementById('filterby').value; //filterby as a number for comparing the right child ie,date,name,amount as 0,1,2 &3 
-        var rows = document.getElementById('ie-list').children;
-        for (var i = 0; i < rows.length; i++) {
-            var row = rows[i];
+    }
+    filterfunc(filter) {
+        let filterby = +document.getElementById('filterby').value; //filterby as a number for comparing the right child ie,date,name,amount as 0,1,2 &3 
+        let rows = document.getElementById('ie-list').children;
+        for (let i = 0; i < rows.length; i++) {
+            let row = rows[i];
             if (filter == '') // for the filterby change listner
              {
                 row.style.display = "";
@@ -70,40 +73,37 @@ var UI = /** @class */ (function () {
                 row.style.display = "none";
             }
         }
-    };
-    return UI;
-}());
-//the class with methods to manipulate disck storage
-var LocalStore = /** @class */ (function () {
-    function LocalStore() {
     }
-    LocalStore.getieentriesfromLS = function () {
-        var ieentriesdateasstring = [];
-        var ieentries = [];
+}
+//the class with methods to manipulate disck storage
+class LocalStore {
+    static getieentriesfromLS() {
+        let ieentriesdateasstring = [];
+        let ieentries = [];
         if (localStorage.getItem('ieentries') === null) {
             ieentriesdateasstring = []; //if there is no data in local storage(when the application is run for the first time)
         }
         else {
             ieentriesdateasstring = JSON.parse(localStorage.getItem('ieentries'));
-            for (var i = 0; i < ieentriesdateasstring.length; i++) // upgrading the type of date from string to date
+            for (let i = 0; i < ieentriesdateasstring.length; i++) // upgrading the type of date from string to date
              {
-                var ie = ieentriesdateasstring[i].ie;
-                var date = ieentriesdateasstring[i].date;
-                var name_1 = ieentriesdateasstring[i].name;
-                var amount = ieentriesdateasstring[i].amount;
-                var ieentryobject = new Ieentry(ie, date, name_1, amount);
+                let ie = ieentriesdateasstring[i].ie;
+                let date = ieentriesdateasstring[i].date;
+                let name = ieentriesdateasstring[i].name;
+                let amount = ieentriesdateasstring[i].amount;
+                let ieentryobject = new Ieentry(ie, date, name, amount);
                 ieentries.push(ieentryobject);
             }
         }
         return ieentries;
-    };
+    }
     //during reaload (with the total calculations)
-    LocalStore.displayieentries = function () {
-        var ieentries = LocalStore.getieentriesfromLS();
-        var income = Number(document.getElementById('ti').innerHTML);
-        var expense = Number(document.getElementById('te').innerHTML);
+    static displayieentries() {
+        const ieentries = LocalStore.getieentriesfromLS();
+        let income = Number(document.getElementById('ti').innerHTML);
+        let expense = Number(document.getElementById('te').innerHTML);
         ieentries.forEach(function (ieentry) {
-            var ui = new UI();
+            const ui = new UI();
             if (ieentry.ie == 'I') {
                 income += Number(ieentry.amount);
             }
@@ -112,18 +112,18 @@ var LocalStore = /** @class */ (function () {
             }
             ui.addieentrytoList(ieentry);
         });
-        document.getElementById('ti').innerHTML = "" + income;
-        document.getElementById('te').innerHTML = "" + expense;
-        document.getElementById('b').innerHTML = "" + +(income - expense);
-    };
-    LocalStore.addieentry = function (ieentry) {
-        var ieentries = LocalStore.getieentriesfromLS();
+        document.getElementById('ti').innerHTML = `${income}`;
+        document.getElementById('te').innerHTML = `${expense}`;
+        document.getElementById('b').innerHTML = `${+(income - expense)}`;
+    }
+    static addieentry(ieentry) {
+        const ieentries = LocalStore.getieentriesfromLS();
         ieentries.push(ieentry); //(here date is actually a Date())
         localStorage.setItem('ieentries', JSON.stringify(ieentries)); //date will be converted into a string  
-    };
-    LocalStore.removeieentry = function (ieentrytobedeleted) {
-        var ieentries = LocalStore.getieentriesfromLS();
-        var found = false; //to prevent deletion of all entries
+    }
+    static removeieentry(ieentrytobedeleted) {
+        const ieentries = LocalStore.getieentriesfromLS();
+        let found = false; //to prevent deletion of all entries
         ieentries.forEach(function (ieentry, index) {
             if ((found == false) && (JSON.stringify(ieentry) === JSON.stringify(ieentrytobedeleted))) { //for proper object comparison, date is a Date() from getieentriesfromLS()
                 ieentries.splice(index, 1);
@@ -131,30 +131,27 @@ var LocalStore = /** @class */ (function () {
             }
         });
         localStorage.setItem('ieentries', JSON.stringify(ieentries));
-    };
-    return LocalStore;
-}());
-// the class with validation and processing of data
-var Data = /** @class */ (function () {
-    function Data() {
     }
-    Data.validateAndProcess = function (datainCSV) {
-        var ui = new UI();
+}
+// the class with validation and processing of data
+class Data {
+    static validateAndProcess(datainCSV) {
+        const ui = new UI();
         if (datainCSV == '') {
             ui.showAlert('Input is empty! Enter the value in CSV fromat with header', 'error');
             return false;
         }
         //for altering the total values
-        var income = Number(document.getElementById('ti').innerHTML);
-        var expense = Number(document.getElementById('te').innerHTML);
-        var arr = datainCSV.split('\n');
+        let income = Number(document.getElementById('ti').innerHTML);
+        let expense = Number(document.getElementById('te').innerHTML);
+        let arr = datainCSV.split('\n');
         //verifying header     
-        var hd = arr[0].split(',');
+        let hd = arr[0].split(',');
         if (hd.length !== 4) {
             ui.showAlert('Header is incorrect! Enter the value in CSV fromat with header', 'error');
             return false;
         }
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             hd[i] = hd[i].toUpperCase().trim();
         }
         if (!(((hd[0] === 'I-E') || (hd[0] === 'IE') || (hd[0] === 'I/E')) && (hd[1] === 'DATE') && (hd[2] === 'NAME') && (hd[3] === 'AMOUNT'))) {
@@ -173,49 +170,49 @@ var Data = /** @class */ (function () {
             return false;
         }
         //verifying the content
-        for (var i = 1; i < arr.length; i++) //validating each entry
+        for (let i = 1; i < arr.length; i++) //validating each entry
          {
-            var data = arr[i].split(',');
-            for (var j = 0; j < 4; j++) //triming and checking for empty values
+            let data = arr[i].split(',');
+            for (let j = 0; j < 4; j++) //triming and checking for empty values
              {
                 data[j] = data[j].trim();
                 if (data[j] == '') {
-                    ui.showAlert(hd[j] + " of entry number " + i + " is empty", 'error');
+                    ui.showAlert(`${hd[j]} of entry number ${i} is empty`, 'error');
                     return false;
                 }
             }
             if (data.length != 4) // checking for more values
              {
-                ui.showAlert(data.length + " values in entry number " + i + ".", 'error');
+                ui.showAlert(`${data.length} values in entry number ${i}.`, 'error');
                 return false;
             }
             if (!((data[0].toUpperCase() == 'I') || (data[0].toUpperCase() == 'E'))) {
-                ui.showAlert("I/E type of entry number " + i + " is not correct", 'error');
+                ui.showAlert(`I/E type of entry number ${i} is not correct`, 'error');
                 return false;
             }
-            var thedate = new Date("" + data[1]);
-            var stringvalue = thedate.toString(); //converting over gate to sring for comparison with invalid date
+            const thedate = new Date(`${data[1]}`);
+            const stringvalue = thedate.toString(); //converting over gate to sring for comparison with invalid date
             if (stringvalue == 'Invalid Date') {
-                ui.showAlert("Date of entry number " + i + " is not correct", 'error');
+                ui.showAlert(`Date of entry number ${i} is not correct`, 'error');
                 return false;
             }
             if (isNaN(+data[3])) // checking if amount is a number
              {
-                ui.showAlert("Amount of entry number " + i + " is not a valid number", 'error');
+                ui.showAlert(`Amount of entry number ${i} is not a valid number`, 'error');
                 return false;
             }
             if ((+data[3]) < 0) // checking if amount is negative
              {
-                ui.showAlert("Amount of entry number " + i + " is negative", 'error');
+                ui.showAlert(`Amount of entry number ${i} is negative`, 'error');
                 return false;
             }
         }
         console.log('positive validation');
         //after positive valifation of the entire input
         //entering the inputs to the local storage and the browser/list/DOM
-        for (var i = 1; i < arr.length; i++) {
-            var data = arr[i].split(',');
-            var ieentry = new Ieentry(data[0].toUpperCase().trim(), data[1].trim(), data[2].trim(), data[3].trim());
+        for (let i = 1; i < arr.length; i++) {
+            let data = arr[i].split(',');
+            const ieentry = new Ieentry(data[0].toUpperCase().trim(), data[1].trim(), data[2].trim(), data[3].trim());
             ui.addieentrytoList(ieentry);
             if (ieentry.ie == 'I') {
                 income += Number(ieentry.amount);
@@ -225,15 +222,14 @@ var Data = /** @class */ (function () {
             }
             LocalStore.addieentry(ieentry);
         }
-        document.getElementById('ti').innerHTML = "" + income;
-        document.getElementById('te').innerHTML = "" + expense;
-        document.getElementById('b').innerHTML = "" + +(income - expense);
+        document.getElementById('ti').innerHTML = `${income}`;
+        document.getElementById('te').innerHTML = `${expense}`;
+        document.getElementById('b').innerHTML = `${+(income - expense)}`;
         ui.showAlert('Entries are added successfully!', 'success');
         ui.clearTextarea();
         return true;
-    };
-    return Data;
-}());
+    }
+}
 //EVENT LISTNERS
 // DOM load event, just calling the displayieentries to diplay the data from LS
 document.addEventListener('DOMContentLoaded', function (e) {
@@ -242,19 +238,19 @@ document.addEventListener('DOMContentLoaded', function (e) {
 });
 //even listner for delete
 document.getElementById('tablecontainer').addEventListener('click', function (e) {
-    var tar = e.target;
+    let tar = e.target;
     if (tar.className == 'delete') // ensuring the click is on the X
      {
-        var ui = new UI();
+        const ui = new UI();
         //collecting all the values of the row to be deleted  
-        var amount = tar.parentElement.previousElementSibling.textContent;
-        var name_2 = tar.parentElement.previousElementSibling.previousElementSibling.textContent;
-        var date = tar.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
-        var ie = tar.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+        const amount = tar.parentElement.previousElementSibling.textContent;
+        const name = tar.parentElement.previousElementSibling.previousElementSibling.textContent;
+        const date = tar.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+        const ie = tar.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
         ui.deleteieentry(tar);
         //updating totals
-        var income = Number(document.getElementById('ti').innerHTML);
-        var expense = Number(document.getElementById('te').innerHTML);
+        let income = Number(document.getElementById('ti').innerHTML);
+        let expense = Number(document.getElementById('te').innerHTML);
         if (ie == 'I') //crosschecking with the ie value collected
          {
             income -= Number(amount);
@@ -262,10 +258,10 @@ document.getElementById('tablecontainer').addEventListener('click', function (e)
         else {
             expense -= Number(amount);
         }
-        document.getElementById('ti').innerHTML = "" + income;
-        document.getElementById('te').innerHTML = "" + expense;
-        document.getElementById('b').innerHTML = "" + +(income - expense);
-        var ieentry = new Ieentry(ie, date, name_2, amount); //generating an istance of the ieentry class to pass the values for deletion fro local storage
+        document.getElementById('ti').innerHTML = `${income}`;
+        document.getElementById('te').innerHTML = `${expense}`;
+        document.getElementById('b').innerHTML = `${+(income - expense)}`;
+        const ieentry = new Ieentry(ie, date, name, amount); //generating an istance of the ieentry class to pass the values for deletion fro local storage
         LocalStore.removeieentry(ieentry);
         ui.showAlert('The entry has been removed!', 'success');
         e.preventDefault();
@@ -273,12 +269,12 @@ document.getElementById('tablecontainer').addEventListener('click', function (e)
 });
 //event listner for sorting change
 document.getElementById('sortby').addEventListener('change', function (e) {
-    var sortby = document.getElementById('sortby').value;
+    const sortby = document.getElementById('sortby').value;
     //empty thetable
     document.getElementById('ie-list').innerHTML = '';
     // getting value from ls
-    var ieentries = LocalStore.getieentriesfromLS();
-    var ui = new UI();
+    let ieentries = LocalStore.getieentriesfromLS();
+    let ui = new UI();
     if (ieentries.length == 0) { //verifying there is some data to be sorte
         ui.showAlert('No entries to be sorted', 'error');
     }
@@ -336,24 +332,24 @@ document.getElementById('sortby').addEventListener('change', function (e) {
 //event listner to clear filtervalue when filterby is changed
 document.getElementById('filterby').addEventListener('change', function (e) {
     document.getElementById('filter').value = '';
-    var ui = new UI();
+    let ui = new UI();
     ui.filterfunc(''); // ensureinf no filtering is done with the previous filter value
     e.preventDefault();
 });
 //event listner whne value is changes by keydown
 document.getElementById('filter').addEventListener('keyup', function (e) {
-    var ui = new UI();
+    const ui = new UI();
     ui.filterfunc(e.target.value.toUpperCase());
     //e.preventDefault(); // not sure abouts it effect
 });
 //even listner for submit
 document.getElementById('submitbtn').addEventListener('click', function (e) {
-    var datainCSV = document.getElementById('ie-input').value;
+    const datainCSV = document.getElementById('ie-input').value;
     //let dp= new DataProcessing();
     console.log('created new object and calling valifate fucntion next');
     //let validation= dp.validateAndProcess(datainCSV);
     //const vali=dp.validateAndProcess(datainCSV);
-    var vali = Data.validateAndProcess(datainCSV);
+    const vali = Data.validateAndProcess(datainCSV);
     console.log('validation and entry over');
     e.preventDefault();
 });
