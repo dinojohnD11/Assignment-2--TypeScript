@@ -1,0 +1,23 @@
+{
+  "name": "assignment-2",
+  "version": "1.0.0",
+  "description": "Typescript demo",
+  "main": "app.js",
+  "dependencies": {
+    
+  },
+  "devDependencies": {"prettier": "^2.0.5"},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinojohnD11/Assignment-2--TypeScript.git"
+  },
+  "author": "Dino Babu John",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dinojohnD11/Assignment-2--TypeScript/issues"
+  },
+  "homepage": "https://github.com/dinojohnD11/Assignment-2--TypeScript#readme"
+}
